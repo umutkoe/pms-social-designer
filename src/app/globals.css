@@ -1,0 +1,41 @@
+:root {
+  --navy: #003D7A;
+  --accent: #0099FF;
+  --action: #0052CC;
+  --body-text: #666666;
+  --bg: #F5F7FA;
+  --white: #FFFFFF;
+  --card-border: rgba(0,82,204,0.12);
+  --card-border-hover: rgba(0,82,204,0.35);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--navy);
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--card-border); }
+
+[contenteditable] { outline: none; cursor: text; }
+[contenteditable]:focus { outline: 1px dashed rgba(0,153,255,0.4); }
+
+input, textarea, select {
+  font-family: 'Inter', sans-serif;
+}
+
+button { cursor: pointer; font-family: 'Inter', sans-serif; }
+
+input[type=range] {
+  accent-color: var(--accent);
+  height: 4px;
+}
