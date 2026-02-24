@@ -1,0 +1,13 @@
+{
+  "name": "pms-post-designer",
+  "version": "1.4.0",
+  "description": "PMS+ Social Media Post Designer",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": { "node": ">=16.0.0" }
+}

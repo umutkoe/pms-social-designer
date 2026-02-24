@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PMS+ Post Designer v1.4.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ═══════════════════════════════════
+   LIGHT TOKENS
+═══════════════════════════════════ */
+:root{
+  --navy:#003D7A;--accent:#0099FF;--action:#0052CC;
+  --grey:#666;--soft:#F5F7FA;--white:#fff;
+  --lp:252px;--rp:264px;
+  --s1:#fff;--s2:#F5F7FA;--s3:#ECEEF2;
+  --t1:#003D7A;--t2:#666;--t3:#aaa;
+  --b1:rgba(0,82,204,.11);--b2:rgba(0,82,204,.28);
+}
+html.dark{
+  --s1:#181C24;--s2:#20242F;--s3:#12151C;
+  --t1:#E8F4FF;--t2:#8BA5C0;--t3:#415A70;
+  --b1:rgba(0,153,255,.13);--b2:rgba(0,153,255,.3);
+  --white:#181C24;--soft:#20242F;--grey:#8BA5C0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--s3);color:var(--t1);overflow:hidden;transition:background .28s,color .28s}
+.shell{display:flex;flex-direction:column;height:100vh}
+
+/* ── TOPBAR ── */
+.topbar{height:48px;background:var(--s1);border-bottom:1.5px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;z-index:300;transition:background .28s,border-color .28s}
+.logo{font-family:'Poppins',sans-serif;font-weight:900;font-size:16px;color:var(--t1);letter-spacing:-.3px}
+.logo em{color:var(--accent);font-style:normal}
+.topbar-mid{font-size:10.5px;color:var(--t2);letter-spacing:.2px}
+.topbar-r{display:flex;align-items:center;gap:8px}
+.ver{font-family:'Space Mono',monospace;font-size:7.5px;color:var(--accent);border:1.5px solid var(--accent);padding:2px 6px;letter-spacing:1.5px}
+.dm-btn{display:flex;align-items:center;gap:6px;border:1.5px solid var(--b1);background:var(--s2);color:var(--t1);padding:4px 11px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.3px;transition:all .2s}
+.dm-btn:hover{border-color:var(--accent);color:var(--accent)}
+html.dark .dm-btn{border-color:var(--accent);color:var(--accent)}
+
+/* ── LAYOUT ── */
+.main{display:grid;grid-template-columns:var(--lp) 1fr var(--rp);flex:1;overflow:hidden}
+
+/* ── PANELS ── */
+.panel{background:var(--s1);overflow-y:auto;padding:12px 12px;transition:background .28s}
+.pl{border-right:1.5px solid var(--b1)}
+.pr{border-left:1.5px solid var(--b1)}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--b1)}
+
+/* Panel tabs (left panel) */
+.ptabs{display:flex;gap:0;margin-bottom:12px;border-bottom:1.5px solid var(--b1)}
+.ptab{flex:1;padding:7px 4px;font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.8px;text-transform:uppercase;cursor:pointer;text-align:center;border:none;background:none;transition:all .15s;font-family:'DM Sans',sans-serif;border-bottom:2px solid transparent;margin-bottom:-1.5px}
+.ptab:hover{color:var(--accent)}
+.ptab.on{color:var(--accent);border-bottom-color:var(--accent)}
+.ptab-content{display:none}.ptab-content.on{display:block}
+
+.ptitle{font-family:'Space Mono',monospace;font-size:7.5px;font-weight:700;color:var(--accent);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:11px;padding-bottom:8px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:6px}
+.sec{font-size:7.5px;font-weight:700;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;margin:10px 0 5px}
+
+/* ── MODE CARDS ── */
+.mode-grid{display:flex;flex-direction:column;gap:3px}
+.mode-card{border:1.5px solid var(--b1);background:var(--s1);cursor:pointer;padding:8px 9px;display:flex;align-items:center;gap:8px;transition:all .13s;text-align:left;width:100%;position:relative}
+.mode-card:hover{border-color:var(--accent);background:var(--s2)}
+.mode-card.on{border-color:var(--action);border-width:2px;background:rgba(0,82,204,.07)}
+.mode-icon{width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--accent);background:rgba(0,153,255,.09);flex-shrink:0}
+.mode-name{font-size:10px;font-weight:700;color:var(--t1);display:block;line-height:1.2}
+.mode-dim{font-family:'Space Mono',monospace;font-size:7.5px;color:var(--t3)}
+.mode-plat{position:absolute;top:4px;right:6px;font-size:7px;font-weight:700;color:var(--action);letter-spacing:.4px;text-transform:uppercase}
+.mode-card.on .mode-plat{color:#fff;background:var(--action);padding:1px 4px}
+.plat-div{font-size:7.5px;font-weight:700;color:var(--t2);letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:5px;margin:7px 0 3px}
+.plat-div::after{content:'';flex:1;height:1px;background:var(--b1)}
+
+/* ── LAYER PANEL ── */
+.layer-list{display:flex;flex-direction:column;gap:3px}
+.layer-item{
+  display:flex;align-items:center;gap:6px;padding:6px 8px;
+  border:1.5px solid var(--b1);background:var(--s1);
+  cursor:pointer;transition:all .13s;
+}
+.layer-item:hover{border-color:var(--accent)}
+.layer-item.sel{border-color:var(--action);background:rgba(0,82,204,.07)}
+.layer-item.hidden{opacity:.45}
+.layer-drag{cursor:grab;color:var(--t3);font-size:11px;flex-shrink:0}
+.layer-eye{border:none;background:none;color:var(--t2);cursor:pointer;font-size:11px;padding:0;transition:color .12s;flex-shrink:0}
+.layer-eye:hover{color:var(--accent)}
+.layer-icon{font-size:10px;color:var(--accent);flex-shrink:0;width:14px;text-align:center}
+.layer-name{flex:1;font-size:10px;font-weight:600;color:var(--t1);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layer-type{font-size:7.5px;color:var(--t3);font-family:'Space Mono',monospace}
+.layer-actions{display:flex;gap:2px;flex-shrink:0}
+.la{border:none;background:none;color:var(--t3);cursor:pointer;font-size:10px;padding:1px 3px;transition:color .12s}
+.la:hover{color:var(--accent)}
+.la.del:hover{color:#F87171}
+
+.layer-add-btns{display:flex;gap:3px;margin-top:6px}
+.lab{flex:1;border:1px solid var(--b1);background:var(--s2);padding:5px;font-size:8.5px;font-weight:700;color:var(--t1);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;transition:all .12s;font-family:'DM Sans',sans-serif}
+.lab:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── TEMPLATE GRID 3 col ── */
+.tgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+.tcard{border:1.5px solid var(--b1);cursor:pointer;overflow:hidden;transition:all .12s;background:none;padding:0;text-align:left}
+.tcard:hover{border-color:var(--accent);transform:scale(1.03)}
+.tcard.on{border-color:var(--action);border-width:2px}
+.tcard-thumb{width:100%;height:34px}
+.tcard-name{font-size:7.5px;font-weight:700;color:var(--t1);padding:3px 5px;background:var(--s1);line-height:1.3}
+
+/* ── SHAPES ── */
+.sgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+.sbtn{aspect-ratio:1;border:1px solid var(--b1);background:var(--s1);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;padding:4px}
+.sbtn:hover{background:rgba(0,153,255,.07);border-color:var(--accent)}
+.sbtn svg{width:15px;height:15px;display:block}
+.srow{display:flex;align-items:center;gap:6px;margin:3px 0}
+.srow label{font-size:8px;color:var(--t2);min-width:52px;font-weight:500}
+.srow input[type=range]{flex:1;accent-color:var(--accent);height:3px;cursor:pointer}
+.srow span{font-size:8px;font-weight:700;color:var(--t1);min-width:28px;text-align:right;font-family:'Space Mono',monospace}
+.sactions{display:flex;gap:3px;margin-top:5px}
+.sa{flex:1;border:1px solid var(--b1);background:var(--s1);padding:4px;font-size:8px;font-weight:700;color:var(--t1);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;transition:all .12s;font-family:'DM Sans',sans-serif}
+.sa:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── TOGGLES ── */
+.tog-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--b1)}
+.tog-row:last-child{border:none}
+.tog-row label{font-size:10px;color:var(--t2)}
+.tog{width:28px;height:15px;background:#4A5568;border-radius:8px;position:relative;cursor:pointer;border:none;transition:background .18s}
+.tog.on{background:var(--action)}
+.tog::after{content:'';position:absolute;top:2px;left:2px;width:11px;height:11px;background:#fff;border-radius:50%;transition:left .18s}
+.tog.on::after{left:15px}
+
+/* ── INPUTS ── */
+.ifield{width:100%;border:1px solid var(--b1);background:var(--s2);padding:5px 8px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--t1);outline:none;transition:border-color .12s,background .28s;resize:none}
+.ifield:focus{border-color:var(--accent)}
+.ifield::placeholder{color:var(--t3)}
+
+/* ── BUTTONS ── */
+.btn{width:100%;padding:8px;border:none;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:all .13s;letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px}
+.btn-p{background:var(--action);color:#fff}.btn-p:hover:not(:disabled){background:var(--navy)}
+.btn-o{background:var(--s2);color:var(--action);border:1.5px solid var(--action)}.btn-o:hover:not(:disabled){background:rgba(0,82,204,.1)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── IMAGE UPLOAD ── */
+.img-drop{border:2px dashed var(--b1);padding:11px 8px;text-align:center;cursor:pointer;transition:all .15s;background:var(--s2);position:relative}
+.img-drop:hover,.img-drop.drag{border-color:var(--accent);background:rgba(0,153,255,.06)}
+.img-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.img-drop i{font-size:16px;color:var(--accent);display:block;margin-bottom:3px}
+.img-drop p{font-size:9px;color:var(--t2)}
+.img-thumbs{display:flex;gap:3px;flex-wrap:wrap;margin-top:5px}
+.ithumb{width:38px;height:38px;object-fit:cover;border:1.5px solid var(--b1);cursor:pointer;transition:all .12s}
+.ithumb:hover{border-color:var(--accent)}.ithumb.sel{border-color:var(--action);border-width:2px}
+
+/* ── SWATCHES ── */
+.swatches{display:flex;gap:4px;flex-wrap:wrap}
+.sw{width:18px;height:18px;cursor:pointer;transition:transform .1s;border:2px solid transparent}
+.sw:hover{transform:scale(1.35)}
+
+/* ── STATS ── */
+.stat{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--b1);font-size:9px}
+.stat:last-child{border:none}
+.sv{font-family:'Space Mono',monospace;font-size:8px;font-weight:700;color:var(--t1)}
+.badge{font-size:7.5px;padding:2px 6px;font-weight:700}
+.bg{background:#E8F8F0;color:#0A8A4A}.bb{background:#E6F2FF;color:var(--action)}
+html.dark .bg{background:#0A2A1A;color:#4ADE80}
+html.dark .bb{background:#0A1A38;color:var(--accent)}
+
+/* ── SAFE ZONE NOTICE ── */
+.sz-notice{background:rgba(0,153,255,.07);border:1px solid rgba(0,153,255,.2);padding:6px 8px;margin-bottom:7px}
+.sz-notice p{font-size:8.5px;color:var(--accent);font-weight:600;line-height:1.5}
+.sz-notice small{font-size:8px;color:var(--t2);display:block;margin-top:2px}
+
+/* ── CANVAS AREA ── */
+.canvas-area{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;overflow:auto;padding:18px;background:var(--s3);background-image:radial-gradient(circle,rgba(0,153,255,.055) 1px,transparent 1px);background-size:16px 16px;transition:background .28s}
+.ctoolbar{display:flex;align-items:center;gap:4px;flex-wrap:wrap;width:100%;max-width:700px}
+.tb{border:1px solid var(--b1);background:var(--s1);padding:4px 9px;font-size:8.5px;font-weight:700;color:var(--t1);cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .12s;font-family:'DM Sans',sans-serif;letter-spacing:.3px}
+.tb:hover{border-color:var(--accent);color:var(--accent)}
+.tb.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sp{flex:1}
+.chint{font-size:8px;color:var(--t3);display:flex;align-items:center;gap:3px}
+.mode-badge{font-size:8.5px;font-weight:700;color:var(--action);background:rgba(0,82,204,.1);border:1px solid rgba(0,82,204,.2);padding:3px 9px;letter-spacing:.4px;white-space:nowrap}
+#postCanvas{position:relative;overflow:hidden;box-shadow:0 10px 52px rgba(0,0,0,.22);transition:width .3s,height .3s;flex-shrink:0}
+#postCanvas *{user-select:none}
+#postCanvas [contenteditable]{user-select:text}
+[contenteditable]{outline:none;cursor:text}
+[contenteditable]:hover{outline:1px dashed rgba(0,153,255,.3)}
+[contenteditable]:focus{outline:1.5px solid rgba(0,153,255,.6)}
+.cmeta{font-size:8px;color:var(--t3);font-family:'Space Mono',monospace;letter-spacing:.3px;text-align:center}
+
+/* ── NOTIF ── */
+.notif{position:fixed;top:58px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:6px 18px;font-size:10px;font-weight:600;z-index:9999;box-shadow:0 4px 22px rgba(0,0,0,.28);animation:ni .18s ease;pointer-events:none;border:1px solid var(--accent)}
+@keyframes ni{from{opacity:0;top:48px}to{opacity:1;top:58px}}
+
+/* ── FLOATING CONTEXT TOOLBAR ── */
+#ctx-toolbar {
+  position: fixed;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  background: var(--s1);
+  border: 1.5px solid var(--b1);
+  box-shadow: 0 6px 24px rgba(0,0,0,.18), 0 1px 4px rgba(0,0,0,.1);
+  padding: 3px;
+  gap: 1px;
+  pointer-events: all;
+  user-select: none;
+  animation: ctx-in .1s ease;
+}
+@keyframes ctx-in { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
+#ctx-toolbar.visible { display: flex; }
+
+/* Small triangle pointer */
+#ctx-toolbar::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--b1);
+}
+#ctx-toolbar::before {
+  content: '';
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: var(--s1);
+  z-index: 1;
+}
+
+.ctx-btn {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px;
+  padding: 6px 9px;
+  border: none; background: none;
+  font-size: 9px; font-weight: 700; color: var(--t2);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: .2px;
+  transition: all .12s;
+  white-space: nowrap;
+  min-width: 44px;
+}
+.ctx-btn i { font-size: 13px; color: var(--t1); margin-bottom: 1px; }
+.ctx-btn:hover { background: var(--s2); color: var(--accent); }
+.ctx-btn:hover i { color: var(--accent); }
+.ctx-btn.ctx-danger:hover { color: #F87171; }
+.ctx-btn.ctx-danger:hover i { color: #F87171; }
+.ctx-sep { width: 1px; height: 32px; background: var(--b1); flex-shrink: 0; margin: 0 1px; }
+
+/* Selection ring on selected layer DOM element */
+.sel-ring { outline: 2px solid var(--accent) !important; outline-offset: 2px; }
+
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">PMS<em>+</em> <span style="font-weight:400;font-size:12px;color:var(--t2)">Design Studio</span></div>
+  <div class="topbar-mid">Social Post Designer</div>
+  <div class="topbar-r">
+    <button class="dm-btn" id="dmBtn" onclick="toggleDark()">
+      <span id="dmIcon">🌙</span><span id="dmLabel">Dark Mode</span>
+    </button>
+    <div class="ver">v1.4.1</div>
+  </div>
+</div>
+
+<div class="notif" id="notif" style="display:none"></div>
+
+<div class="main">
+
+<!-- ══════ LEFT PANEL ══════ -->
+<div class="panel pl">
+  <div class="ptitle"><i class="fas fa-layer-group"></i> Platform Mode</div>
+  <div id="tab-modes">
+    <div class="plat-div"><i class="fab fa-linkedin" style="color:var(--t1)"></i> LinkedIn</div>
+    <div class="mode-grid">
+      <button class="mode-card on" data-mode="li_post" onclick="setMode('li_post',this)">
+        <div class="mode-icon"><i class="fas fa-square"></i></div>
+        <div><span class="mode-name">Post / Feed</span><span class="mode-dim">1200 × 1200</span></div>
+        <span class="mode-plat">LinkedIn</span>
+      </button>
+      <button class="mode-card" data-mode="li_cover" onclick="setMode('li_cover',this)">
+        <div class="mode-icon"><i class="fas fa-panorama"></i></div>
+        <div><span class="mode-name">Profile Cover</span><span class="mode-dim">1584 × 396</span></div>
+        <span class="mode-plat">LinkedIn</span>
+      </button>
+      <button class="mode-card" data-mode="li_landscape" onclick="setMode('li_landscape',this)">
+        <div class="mode-icon"><i class="fas fa-display"></i></div>
+        <div><span class="mode-name">Landscape Post</span><span class="mode-dim">1200 × 627</span></div>
+        <span class="mode-plat">LinkedIn</span>
+      </button>
+      <button class="mode-card" data-mode="li_story" onclick="setMode('li_story',this)">
+        <div class="mode-icon"><i class="fas fa-mobile-screen"></i></div>
+        <div><span class="mode-name">Story / Ad</span><span class="mode-dim">1080 × 1920</span></div>
+        <span class="mode-plat">LinkedIn</span>
+      </button>
+    </div>
+
+    <div class="plat-div" style="margin-top:8px"><i class="fab fa-instagram" style="color:var(--t1)"></i> Instagram</div>
+    <div class="mode-grid">
+      <button class="mode-card" data-mode="ig_square" onclick="setMode('ig_square',this)">
+        <div class="mode-icon"><i class="fas fa-square"></i></div>
+        <div><span class="mode-name">Square Post</span><span class="mode-dim">1080 × 1080</span></div>
+        <span class="mode-plat">Instagram</span>
+      </button>
+      <button class="mode-card" data-mode="ig_story" onclick="setMode('ig_story',this)">
+        <div class="mode-icon"><i class="fas fa-mobile-screen"></i></div>
+        <div><span class="mode-name">Story / Reel</span><span class="mode-dim">1080 × 1920</span></div>
+        <span class="mode-plat">Instagram</span>
+      </button>
+      <button class="mode-card" data-mode="ig_portrait" onclick="setMode('ig_portrait',this)">
+        <div class="mode-icon"><i class="fas fa-portrait"></i></div>
+        <div><span class="mode-name">Portrait 4:5</span><span class="mode-dim">1080 × 1350</span></div>
+        <span class="mode-plat">Instagram</span>
+      </button>
+      <button class="mode-card" data-mode="ig_landscape" onclick="setMode('ig_landscape',this)">
+        <div class="mode-icon"><i class="fas fa-image"></i></div>
+        <div><span class="mode-name">Landscape</span><span class="mode-dim">1080 × 566</span></div>
+        <span class="mode-plat">Instagram</span>
+      </button>
+    </div>
+
+    <div class="plat-div" style="margin-top:8px"><i class="fab fa-x-twitter" style="color:var(--t1)"></i> Twitter / X</div>
+    <div class="mode-grid">
+      <button class="mode-card" data-mode="tw_post" onclick="setMode('tw_post',this)">
+        <div class="mode-icon"><i class="fas fa-image"></i></div>
+        <div><span class="mode-name">Post Image</span><span class="mode-dim">1600 × 900</span></div>
+        <span class="mode-plat">Twitter/X</span>
+      </button>
+      <button class="mode-card" data-mode="tw_cover" onclick="setMode('tw_cover',this)">
+        <div class="mode-icon"><i class="fas fa-panorama"></i></div>
+        <div><span class="mode-name">Header Cover</span><span class="mode-dim">1500 × 500</span></div>
+        <span class="mode-plat">Twitter/X</span>
+      </button>
+    </div>
+
+    <div class="plat-div" style="margin-top:8px"><i class="fab fa-facebook" style="color:var(--t1)"></i> Facebook</div>
+    <div class="mode-grid">
+      <button class="mode-card" data-mode="fb_post" onclick="setMode('fb_post',this)">
+        <div class="mode-icon"><i class="fas fa-square"></i></div>
+        <div><span class="mode-name">Feed Post</span><span class="mode-dim">1200 × 1200</span></div>
+        <span class="mode-plat">Facebook</span>
+      </button>
+      <button class="mode-card" data-mode="fb_cover" onclick="setMode('fb_cover',this)">
+        <div class="mode-icon"><i class="fas fa-panorama"></i></div>
+        <div><span class="mode-name">Page Cover</span><span class="mode-dim">1640 × 924</span></div>
+        <span class="mode-plat">Facebook</span>
+      </button>
+      <button class="mode-card" data-mode="fb_story" onclick="setMode('fb_story',this)">
+        <div class="mode-icon"><i class="fas fa-mobile-screen"></i></div>
+        <div><span class="mode-name">Story</span><span class="mode-dim">1080 × 1920</span></div>
+        <span class="mode-plat">Facebook</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════ CANVAS ══════ -->
+<div class="canvas-area" id="canvasArea">
+  <div class="ctoolbar">
+    <button class="tb" onclick="undo()"><i class="fas fa-rotate-left"></i> Undo</button>
+    <button class="tb" onclick="addFreeText()"><i class="fas fa-font"></i> Add Text</button>
+    <div class="sp"></div>
+    <div class="mode-badge" id="modeBadge">LinkedIn · Post</div>
+    <div class="sp"></div>
+    <span class="chint"><i class="fas fa-mouse-pointer"></i> Tıkla · Sürükle · Dbl-click düzenle · Del sil</span>
+  </div>
+  <!-- FLOATING CONTEXT TOOLBAR — appears above selected element -->
+  <div id="ctx-toolbar">
+    <button class="ctx-btn" onclick="layerToFront()" title="Bring to Front">
+      <i class="fas fa-angles-up"></i>En Öne
+    </button>
+    <button class="ctx-btn" onclick="layerForward()" title="Bring Forward">
+      <i class="fas fa-angle-up"></i>İleri
+    </button>
+    <div class="ctx-sep"></div>
+    <button class="ctx-btn" onclick="layerBackward()" title="Send Backward">
+      <i class="fas fa-angle-down"></i>Geri
+    </button>
+    <button class="ctx-btn" onclick="layerToBack()" title="Send to Back">
+      <i class="fas fa-angles-down"></i>En Arkaya
+    </button>
+    <div class="ctx-sep"></div>
+    <button class="ctx-btn" onclick="duplicateLayer()" title="Duplicate">
+      <i class="fas fa-copy"></i>Kopyala
+    </button>
+    <div class="ctx-sep"></div>
+    <button class="ctx-btn ctx-danger" onclick="deleteSelected()" title="Delete (Del)">
+      <i class="fas fa-trash"></i>Sil
+    </button>
+  </div>
+  <div id="postCanvas"></div>
+  <div class="cmeta" id="cmeta"></div>
+</div>
+
+<!-- ══════ RIGHT PANEL ══════ -->
+<div class="panel pr">
+  <div class="ptitle"><i class="fas fa-pen-nib"></i> Content & Export</div>
+
+  <!-- SAFE NOTICE -->
+  <div class="sz-notice" id="szNotice" style="display:none">
+    <p id="szText"></p><small id="szSub"></small>
+  </div>
+
+  <!-- IMAGE -->
+  <div class="sec">Background Image</div>
+  <div class="img-drop" id="imgDrop">
+    <input type="file" accept="image/*" id="imgInput" onchange="uploadImg(this.files)">
+    <i class="fas fa-cloud-arrow-up"></i>
+    <p>Drop image or click to upload</p>
+  </div>
+  <div class="img-thumbs" id="imgThumbs"></div>
+  <div id="imgPosCtrls" style="display:none">
+    <div class="sec">Image Position</div>
+    <div style="display:flex;gap:3px" id="imgPosChips">
+      <button class="sa on" onclick="setImgPos('cover',this)">Full Cover</button>
+      <button class="sa" onclick="setImgPos('right',this)">Right Half</button>
+      <button class="sa" onclick="setImgPos('bottom',this)">Bottom</button>
+    </div>
+    <div class="srow" style="margin-top:5px"><label>Opacity</label><input type="range" min="10" max="100" value="100" oninput="S.imgOp=+this.value;render();this.nextElementSibling.textContent=this.value+'%'"><span>100%</span></div>
+  </div>
+
+  <!-- BRAND TEMPLATE — 12 templates, 3 col -->
+  <div class="sec">Brand Template</div>
+  <div class="tgrid" id="tplGrid"></div>
+
+  <!-- CONTENT -->
+  <div class="sec">Content</div>
+  <div style="font-size:8px;color:var(--t2);margin-bottom:2px">Headline</div>
+  <textarea class="ifield" rows="2" id="inH" oninput="S.c.headline=this.value;render();updateStats()">Transform Your Infrastructure</textarea>
+  <div style="font-size:8px;color:var(--t2);margin:5px 0 2px">Body</div>
+  <textarea class="ifield" rows="2" id="inB" oninput="S.c.body=this.value;render();updateStats()">Secure, scalable B2B solutions for enterprise.</textarea>
+  <div style="font-size:8px;color:var(--t2);margin:5px 0 2px">Tag Label</div>
+  <input class="ifield" type="text" id="inTag" value="INFRASTRUCTURE TECH" oninput="S.c.tag=this.value;render()">
+  <div style="font-size:8px;color:var(--t2);margin:5px 0 2px">CTA Button</div>
+  <input class="ifield" type="text" id="inCta" value="Get Started" oninput="S.c.cta=this.value;render()">
+  <div style="font-size:8px;color:var(--t2);margin:5px 0 2px">Logo</div>
+  <input class="ifield" type="text" id="inLogo" value="PMS" oninput="S.c.logo=this.value;render()">
+
+  <!-- SHAPES -->
+  <div class="sec">Shapes</div>
+  <div class="sgrid" id="shapeLib"></div>
+  <div style="margin-top:5px">
+    <div class="srow"><label>Opacity</label><input type="range" min="5" max="80" value="18" id="sOp" oninput="SD.op=+this.value;applySelected('op',+this.value);this.nextElementSibling.textContent=this.value+'%'"><span>18%</span></div>
+    <div class="srow"><label>Size</label><input type="range" min="20" max="500" value="120" id="sSz" oninput="SD.sz=+this.value;applySelected('sz',+this.value);this.nextElementSibling.textContent=this.value+'px'"><span>120px</span></div>
+    <div class="srow"><label>Rotate</label><input type="range" min="0" max="360" value="0" id="sRo" oninput="SD.ro=+this.value;applySelected('ro',+this.value);this.nextElementSibling.textContent=this.value+'°'"><span>0°</span></div>
+  </div>
+  <div class="sactions">
+    <button class="sa" onclick="clearShapes()"><i class="fas fa-trash-can"></i> Clear</button>
+    <button class="sa" onclick="randomShapes()"><i class="fas fa-shuffle"></i> Random</button>
+    <button class="sa" onclick="deleteSelected()"><i class="fas fa-xmark"></i> Del Sel</button>
+  </div>
+
+  <!-- TOGGLES -->
+  <div class="sec">Elements</div>
+  <div class="tog-row"><label>Logo</label><button class="tog on" id="togLogo" onclick="this.classList.toggle('on');render()"></button></div>
+  <div class="tog-row"><label>Tag Label</label><button class="tog on" id="togTag" onclick="this.classList.toggle('on');render()"></button></div>
+  <div class="tog-row"><label>CTA Button</label><button class="tog on" id="togCta" onclick="this.classList.toggle('on');render()"></button></div>
+  <div class="tog-row"><label>Accent Line</label><button class="tog on" id="togLine" onclick="this.classList.toggle('on');render()"></button></div>
+  <div class="tog-row"><label>Safe Zone Guide</label><button class="tog on" id="togSafe" onclick="this.classList.toggle('on');render()"></button></div>
+
+  <!-- TYPOGRAPHY -->
+  <div class="sec">Typography</div>
+  <div class="srow"><label>Headline</label><input type="range" min="14" max="60" value="30" id="fsH" oninput="S.fsH=+this.value;render();this.nextElementSibling.textContent=this.value+'px'"><span>30px</span></div>
+  <div class="srow"><label>Body</label><input type="range" min="9" max="22" value="13" id="fsB" oninput="S.fsB=+this.value;render();this.nextElementSibling.textContent=this.value+'px'"><span>13px</span></div>
+
+  <!-- EXPORT -->
+  <div class="sec">Export</div>
+  <button class="btn btn-p" id="btnPNG" onclick="doExport('png')"><i class="fas fa-image"></i> Download PNG (Full Res)</button>
+  <button class="btn btn-o" id="btnPDF" onclick="doExport('pdf')"><i class="fas fa-file-pdf"></i> Download PDF</button>
+  <button class="btn btn-o" onclick="doExport('copy')"><i class="fas fa-clipboard"></i> Copy to Clipboard</button>
+
+  <!-- PALETTE -->
+  <div class="sec">PMS+ Brand Colors</div>
+  <div class="swatches">
+    <div class="sw" style="background:#003D7A" onclick="copyColor('#003D7A')" title="#003D7A"></div>
+    <div class="sw" style="background:#0099FF" onclick="copyColor('#0099FF')" title="#0099FF"></div>
+    <div class="sw" style="background:#0052CC" onclick="copyColor('#0052CC')" title="#0052CC"></div>
+    <div class="sw" style="background:#666;border:2px solid transparent" onclick="copyColor('#666666')" title="#666666"></div>
+    <div class="sw" style="background:#F5F7FA;border:1.5px solid #ccc" onclick="copyColor('#F5F7FA')" title="#F5F7FA"></div>
+    <div class="sw" style="background:#fff;border:1.5px solid #ccc" onclick="copyColor('#FFFFFF')" title="#FFFFFF"></div>
+  </div>
+  <p style="font-size:7.5px;color:var(--t3);margin-top:3px">Click to copy hex</p>
+
+  <!-- STATS -->
+  <div class="sec">Metrics</div>
+  <div class="stat"><span style="color:var(--t2)">Headline</span><span class="sv" id="stH">0 ch</span></div>
+  <div class="stat"><span style="color:var(--t2)">Body</span><span class="sv" id="stB">0 ch</span></div>
+  <div class="stat"><span style="color:var(--t2)">Resolution</span><span class="sv" id="stR">–</span></div>
+  <div class="stat"><span style="color:var(--t2)">Brand</span><span class="badge bg">PMS+ ✓</span></div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+/* ═══════════════════════════════════════════════
+   PLATFORM MODES
+═══════════════════════════════════════════════ */
+const MODES={
+  li_post:{label:'LinkedIn Post',realW:1200,realH:1200,cw:500,ch:500,safe:null,layout:'square',hint:null,badge:'LinkedIn · Post'},
+  li_cover:{label:'LinkedIn Cover',realW:1584,realH:396,cw:600,ch:150,safe:{t:14,l:80,r:14,b:14},layout:'cover',hint:'⚠️ Profil fotoğrafı mobilde sol ~210px\'i kapatır.',hintSub:'İçeriği ortada veya sağda tutun.',badge:'LinkedIn · Kapak'},
+  li_landscape:{label:'LinkedIn Landscape',realW:1200,realH:627,cw:600,ch:314,safe:null,layout:'landscape',hint:null,badge:'LinkedIn · Yatay'},
+  li_story:{label:'LinkedIn Story',realW:1080,realH:1920,cw:270,ch:480,safe:{t:70,l:28,r:28,b:90},layout:'story',hint:'⚠️ Üst ve alt ~250px UI tarafından kapatılır.',hintSub:'İçeriği güvenli alan çizgisi içinde tutun.',badge:'LinkedIn · Story'},
+  ig_square:{label:'Instagram Square',realW:1080,realH:1080,cw:500,ch:500,safe:null,layout:'square',hint:null,badge:'Instagram · Kare'},
+  ig_story:{label:'Instagram Story',realW:1080,realH:1920,cw:270,ch:480,safe:{t:70,l:24,r:24,b:90},layout:'story',hint:'⚠️ Story UI üst ve altı kapatır.',hintSub:'İçeriği güvenli alan içinde tutun.',badge:'Instagram · Story'},
+  ig_portrait:{label:'Instagram Portrait',realW:1080,realH:1350,cw:360,ch:450,safe:null,layout:'portrait',hint:null,badge:'Instagram · Dikey 4:5'},
+  ig_landscape:{label:'Instagram Landscape',realW:1080,realH:566,cw:600,ch:314,safe:null,layout:'landscape',hint:null,badge:'Instagram · Yatay'},
+  tw_post:{label:'Twitter/X Post',realW:1600,realH:900,cw:600,ch:337,safe:null,layout:'landscape',hint:null,badge:'Twitter/X · Post'},
+  tw_cover:{label:'Twitter/X Cover',realW:1500,realH:500,cw:600,ch:200,safe:{t:14,l:70,r:70,b:44},layout:'cover',hint:'⚠️ Avatar sol-alt köşeyi kapatır.',hintSub:'Marka içeriğini ortada tutun.',badge:'Twitter/X · Kapak'},
+  fb_post:{label:'Facebook Post',realW:1200,realH:1200,cw:500,ch:500,safe:null,layout:'square',hint:null,badge:'Facebook · Post'},
+  fb_cover:{label:'Facebook Cover',realW:1640,realH:924,cw:600,ch:338,safe:{t:18,l:18,r:18,b:55},layout:'cover',hint:'⚠️ Profil fotoğrafı masaüstünde sol-alt\'ı kapatır.',hintSub:'Marka içeriğini sağ tarafa veya ortaya koyun.',badge:'Facebook · Kapak'},
+  fb_story:{label:'Facebook Story',realW:1080,realH:1920,cw:270,ch:480,safe:{t:70,l:24,r:24,b:90},layout:'story',hint:'⚠️ Story UI üst ~60px ve altı ~80px kapatır.',hintSub:'Tüm önemli içeriği güvenli alanda tutun.',badge:'Facebook · Story'},
+}
+
+/* ═══════════════════════════════════════════════
+   12 BRAND TEMPLATES
+═══════════════════════════════════════════════ */
+const TPLS={
+  navy_bold:{name:'Navy Bold',bg:'linear-gradient(145deg,#003D7A 0%,#002255 100%)',text:'#fff',muted:'rgba(255,255,255,.6)',accent:'#0099FF',tag:'#0099FF',logo:'rgba(255,255,255,.2)',cta:'#0099FF',ctaT:'#fff',ctaBd:null,line:'#0099FF',thumb:'linear-gradient(135deg,#003D7A 0%,#0052CC 100%)'},
+  navy_radial:{name:'Navy Radial',bg:'radial-gradient(ellipse at 30% 40%, #0052CC 0%, #003D7A 45%, #001830 100%)',text:'#fff',muted:'rgba(200,230,255,.6)',accent:'#0099FF',tag:'#0099FF',logo:'rgba(255,255,255,.2)',cta:'#0099FF',ctaT:'#fff',ctaBd:null,line:'#0099FF',thumb:'radial-gradient(ellipse at 30% 50%,#0052CC,#003D7A 60%,#001830)'},
+  diagonal_split:{name:'Diagonal Split',bg:'linear-gradient(125deg,#003D7A 0%,#003D7A 48%,#0052CC 52%,#0099FF 100%)',text:'#fff',muted:'rgba(255,255,255,.65)',accent:'#fff',tag:'rgba(255,255,255,.85)',logo:'rgba(255,255,255,.25)',cta:'#fff',ctaT:'#003D7A',ctaBd:null,line:'rgba(255,255,255,.4)',thumb:'linear-gradient(125deg,#003D7A 0%,#003D7A 48%,#0052CC 52%,#0099FF 100%)'},
+  action_burst:{name:'Action Burst',bg:'linear-gradient(135deg,#0052CC 0%,#0099FF 60%,#00B4D8 100%)',text:'#fff',muted:'rgba(255,255,255,.7)',accent:'#fff',tag:'rgba(255,255,255,.9)',logo:'rgba(255,255,255,.25)',cta:'#003D7A',ctaT:'#fff',ctaBd:null,line:'rgba(255,255,255,.35)',thumb:'linear-gradient(135deg,#0052CC,#0099FF 60%,#00B4D8)'},
+  midnight_deep:{name:'Midnight Deep',bg:'linear-gradient(160deg,#000D1A 0%,#001B3D 50%,#002A5C 100%)',text:'#E8F4FF',muted:'rgba(160,210,255,.55)',accent:'#0099FF',tag:'#0099FF',logo:'rgba(0,153,255,.28)',cta:'#0052CC',ctaT:'#fff',ctaBd:null,line:'#0099FF',thumb:'linear-gradient(160deg,#000D1A,#001B3D 50%,#002A5C)'},
+  navy_mesh:{name:'Navy Mesh',bg:'linear-gradient(145deg,#003D7A,#002A5C)',text:'#fff',muted:'rgba(200,230,255,.6)',accent:'#0099FF',tag:'#0099FF',logo:'rgba(255,255,255,.2)',cta:'#0099FF',ctaT:'#fff',ctaBd:null,line:'#0099FF',thumb:'linear-gradient(145deg,#003D7A,#0052CC)'},
+  white_clean:{name:'Clean White',bg:'#FFFFFF',text:'#003D7A',muted:'#666666',accent:'#0052CC',tag:'#0052CC',logo:'#003D7A',cta:'#0052CC',ctaT:'#fff',ctaBd:null,line:'#0052CC',thumb:'linear-gradient(135deg,#FFFFFF 50%,#E6F0FF)'},
+  soft_grey:{name:'Soft Grey',bg:'#F5F7FA',text:'#003D7A',muted:'#666666',accent:'#0099FF',tag:'#0099FF',logo:'#003D7A',cta:'transparent',ctaT:'#0052CC',ctaBd:'#0052CC',line:'#0099FF',thumb:'linear-gradient(135deg,#F5F7FA,#DDE8FF)'},
+  blueprint:{name:'Blueprint',bg:'#F0F5FF',text:'#003D7A',muted:'#0052CC',accent:'#0099FF',tag:'#0052CC',logo:'#003D7A',cta:'#003D7A',ctaT:'#fff',ctaBd:null,line:'#0099FF',thumb:'linear-gradient(135deg,#F0F5FF,#E0ECFF)'},
+  frost:{name:'Frost Blue',bg:'linear-gradient(145deg,#EEF5FF 0%,#DDEEFF 50%,#CCE6FF 100%)',text:'#003D7A',muted:'#0052CC',accent:'#0099FF',tag:'#0099FF',logo:'#003D7A',cta:'#003D7A',ctaT:'#fff',ctaBd:null,line:'#0099FF',thumb:'linear-gradient(145deg,#EEF5FF,#CCE6FF)'},
+  navy_accent_panel:{name:'Accent Panel',bg:'#FFFFFF',text:'#003D7A',muted:'#666666',accent:'#0099FF',tag:'#0052CC',logo:'rgba(255,255,255,.9)',cta:'#0052CC',ctaT:'#fff',ctaBd:null,line:'#0099FF',accentPanel:true,panelColor:'#003D7A',thumb:'linear-gradient(90deg,#003D7A 38%,#fff 38%)'},
+  split_light:{name:'Split Light',bg:'#F5F7FA',text:'#003D7A',muted:'#666666',accent:'#0099FF',tag:'#0099FF',logo:'rgba(255,255,255,.9)',cta:'#0099FF',ctaT:'#fff',ctaBd:null,line:'transparent',accentPanel:true,panelColor:'#0052CC',thumb:'linear-gradient(90deg,#0052CC 38%,#F5F7FA 38%)'},
+}
+
+/* ═══════════════════════════════════════════════
+   SHAPES
+═══════════════════════════════════════════════ */
+const SHAPES=[
+  {id:'circle',d:'<circle cx="50" cy="50" r="48"/>'},
+  {id:'ring',d:'<circle cx="50" cy="50" r="38" fill="none" stroke-width="12"/>'},
+  {id:'square',d:'<rect x="3" y="3" width="94" height="94"/>'},
+  {id:'sqr_o',d:'<rect x="3" y="3" width="94" height="94" fill="none" stroke-width="7"/>'},
+  {id:'tri',d:'<polygon points="50,4 96,96 4,96"/>'},
+  {id:'diamond',d:'<polygon points="50,3 97,50 50,97 3,50"/>'},
+  {id:'hex',d:'<polygon points="50,2 93,26 93,74 50,98 7,74 7,26"/>'},
+  {id:'cross',d:'<rect x="38" y="2" width="24" height="96"/><rect x="2" y="38" width="96" height="24"/>'},
+  {id:'hbar',d:'<rect x="0" y="38" width="100" height="24"/>'},
+  {id:'vbar',d:'<rect x="38" y="0" width="24" height="100"/>'},
+  {id:'diag',d:'<line x1="2" y1="2" x2="98" y2="98" stroke-width="10" stroke-linecap="square" fill="none"/>'},
+  {id:'arch',d:'<path d="M2,96 L2,50 Q50,2 98,50 L98,96 Z"/>'},
+  {id:'wave',d:'<path d="M0,68 Q25,28 50,68 Q75,108 100,68 L100,100 L0,100Z"/>'},
+  {id:'dot4',d:'<circle cx="25" cy="25" r="10"/><circle cx="75" cy="25" r="10"/><circle cx="25" cy="75" r="10"/><circle cx="75" cy="75" r="10"/>'},
+  {id:'dot9',d:'<circle cx="20" cy="20" r="7"/><circle cx="50" cy="20" r="7"/><circle cx="80" cy="20" r="7"/><circle cx="20" cy="50" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="80" cy="50" r="7"/><circle cx="20" cy="80" r="7"/><circle cx="50" cy="80" r="7"/><circle cx="80" cy="80" r="7"/>'},
+  {id:'corner',d:'<path d="M2,80 L2,2 L80,2 L80,14 L14,14 L14,80 Z"/>'},
+  {id:'bracket',d:'<path d="M30,5 L10,5 L10,95 L30,95 M70,5 L90,5 L90,95 L70,95" fill="none" stroke-width="9" stroke-linecap="square"/>'},
+  {id:'blob',d:'<path d="M55,8 Q88,5 92,38 Q98,72 72,88 Q46,104 22,80 Q-4,56 10,30 Q22,2 55,8Z"/>'},
+  {id:'zigzag',d:'<polyline points="0,75 20,25 40,75 60,25 80,75 100,25" fill="none" stroke-width="10" stroke-linecap="square"/>'},
+]
+const STROKE_IDS=new Set(['ring','sqr_o','diag','bracket','zigzag'])
+
+/* ═══════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
+const S={
+  mode:'li_post', tpl:'navy_bold',
+  c:{headline:'Transform Your Infrastructure',body:'Secure, scalable B2B solutions for enterprise.',tag:'INFRASTRUCTURE TECH',cta:'Get Started',logo:'PMS'},
+  image:null, imgPos:'cover', imgOp:100,
+  layers:[], fsH:30, fsB:13,
+  history:[]
+}
+const SD={op:18,sz:120,ro:0}
+let selId=null   // selected layer id
+let lidCtr=0
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+window.onload=()=>{
+  buildTplGrid()
+  buildShapeLib()
+  restoreTheme()
+  render()
+  updateStats()
+  setupDrop()
+  saveHistory()
+
+  // Global keyboard shortcuts
+  document.addEventListener('keydown', e=>{
+    const tag = document.activeElement?.tagName
+    const ce  = document.activeElement?.isContentEditable
+    if(tag==='INPUT'||tag==='TEXTAREA'||ce) return
+    if((e.key==='Delete'||e.key==='Backspace') && selId!==null){
+      e.preventDefault(); deleteSelected()
+    }
+    if(e.key==='Escape'){ deselect() }
+  })
+
+  // Click outside canvas → deselect
+  document.addEventListener('mousedown', e=>{
+    const cv=document.getElementById('postCanvas')
+    const tb=document.getElementById('ctx-toolbar')
+    if(!cv?.contains(e.target) && !tb?.contains(e.target)) deselect()
+  })
+}
+
+/* ── Template grid ── */
+function buildTplGrid(){
+  document.getElementById('tplGrid').innerHTML=Object.entries(TPLS).map(([k,t])=>`
+    <button class="tcard ${k===S.tpl?'on':''}" onclick="setTpl('${k}',this)">
+      <div class="tcard-thumb" style="background:${t.thumb}"></div>
+      <div class="tcard-name">${t.name}</div>
+    </button>`).join('')
+}
+function setTpl(k,el){
+  document.querySelectorAll('.tcard').forEach(x=>x.classList.remove('on'))
+  el.classList.add('on'); S.tpl=k; saveHistory(); render()
+}
+
+/* ── Shape library ── */
+function buildShapeLib(){
+  document.getElementById('shapeLib').innerHTML=SHAPES.map(s=>`
+    <button class="sbtn" title="${s.id}" onclick="addShape('${s.id}')">
+      <svg viewBox="0 0 100 100" fill="var(--accent)" stroke="var(--accent)" stroke-width="0">${s.d}</svg>
+    </button>`).join('')
+}
+
+/* ── Mode ── */
+function setMode(k,el){
+  document.querySelectorAll('.mode-card').forEach(x=>x.classList.remove('on'))
+  el.classList.add('on'); S.mode=k
+  deselect(); updateSafeNotice(); saveHistory(); render()
+}
+function updateSafeNotice(){
+  const m=MODES[S.mode], n=document.getElementById('szNotice')
+  if(m.hint){
+    document.getElementById('szText').textContent=m.hint
+    document.getElementById('szSub').textContent=m.hintSub||''
+    n.style.display=''
+  } else n.style.display='none'
+}
+
+/* ── Tool (kept for undo toolbar button) ── */
+function setTool(t){
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('active'))
+  const el=document.getElementById('tb'+t[0].toUpperCase()+t.slice(1))
+  if(el) el.classList.add('active')
+}
+
+/* ═══════════════════════════════════════════════
+   LAYER MANAGEMENT
+   layers[] ordered bottom→top (higher index = on top)
+═══════════════════════════════════════════════ */
+function nid(){ return ++lidCtr }
+
+/* ── Add shape layer ── */
+function addShape(shapeId){
+  const m=MODES[S.mode], sz=SD.sz
+  const l={id:nid(),type:'shape',shapeId,op:SD.op,sz,ro:SD.ro,
+    x: Math.max(10, Math.random()*(m.cw-sz-20)|0),
+    y: Math.max(10, Math.random()*(m.ch-sz-20)|0)}
+  S.layers.push(l)
+  selId=l.id
+  saveHistory(); render(); positionToolbar()
+  notify('Şekil eklendi — sürükle veya dbl-click kaldır')
+}
+
+/* ── Add free-text layer ── */
+function addFreeText(){
+  const m=MODES[S.mode], T=TPLS[S.tpl]
+  const l={id:nid(),type:'text',text:'Yazınızı girin',op:100,sz:18,ro:0,
+    color:T.text,
+    x:m.cw/2-80|0, y:m.ch/2-12|0}
+  S.layers.push(l)
+  selId=l.id
+  saveHistory(); render()
+  // Focus the text element immediately
+  setTimeout(()=>{
+    const el=document.querySelector('[data-lid="'+l.id+'"]')
+    if(el){ el.focus(); selectAll(el) }
+  }, 30)
+  hideToolbar()
+}
+
+/* ── Delete ── */
+function deleteLayer(id){
+  const i=S.layers.findIndex(l=>l.id===id); if(i===-1) return
+  S.layers.splice(i,1)
+  if(selId===id){ selId=null; hideToolbar() }
+  saveHistory(); render()
+}
+function deleteSelected(){
+  if(selId!==null) deleteLayer(selId)
+}
+
+/* ── Order operations ── */
+function getIdx(){ return S.layers.findIndex(l=>l.id===selId) }
+
+function layerForward(){
+  const i=getIdx(); if(i<0||i===S.layers.length-1) return
+  swap(i,i+1); saveHistory(); render(); positionToolbar(); notify('Öne getirildi')
+}
+function layerBackward(){
+  const i=getIdx(); if(i<=0) return
+  swap(i,i-1); saveHistory(); render(); positionToolbar(); notify('Arkaya gönderildi')
+}
+function layerToFront(){
+  const i=getIdx(); if(i<0) return
+  S.layers.push(S.layers.splice(i,1)[0])
+  saveHistory(); render(); positionToolbar(); notify('En öne getirildi')
+}
+function layerToBack(){
+  const i=getIdx(); if(i<0) return
+  S.layers.unshift(S.layers.splice(i,1)[0])
+  saveHistory(); render(); positionToolbar(); notify('En arkaya gönderildi')
+}
+function duplicateLayer(){
+  const i=getIdx(); if(i<0) return
+  const orig=S.layers[i]
+  const copy={...orig, id:nid(), x:orig.x+18, y:orig.y+18}
+  S.layers.splice(i+1,0,copy)
+  selId=copy.id
+  saveHistory(); render(); positionToolbar(); notify('Kopyalandı')
+}
+function swap(a,b){ [S.layers[a],S.layers[b]]=[S.layers[b],S.layers[a]] }
+
+/* ── Select a layer ── */
+function selectLayer(id){
+  selId=id; render(); positionToolbar()
+  // Sync shape sliders to selected layer values
+  const l=S.layers.find(x=>x.id===id)
+  if(l&&l.type==='shape'){
+    ['sOp','sSz','sRo'].forEach(sid=>{
+      const el=document.getElementById(sid); if(!el) return
+      const prop={sOp:'op',sSz:'sz',sRo:'ro'}[sid]
+      const unit={sOp:'%',sSz:'px',sRo:'°'}[sid]
+      el.value=l[prop]; el.nextElementSibling.textContent=l[prop]+unit
+    })
+    SD.op=l.op; SD.sz=l.sz; SD.ro=l.ro
+  }
+}
+
+/* ── Deselect ── */
+function deselect(){
+  selId=null; hideToolbar(); render()
+}
+
+/* ── Apply slider value to selected shape ── */
+function applySelected(prop,val){
+  const l=S.layers.find(x=>x.id===selId&&x.type==='shape')
+  if(l){ l[prop]=val; render() }
+}
+
+/* ═══════════════════════════════════════════════
+   FLOATING TOOLBAR
+   Appears above selected element, attached to canvas coordinates
+═══════════════════════════════════════════════ */
+function positionToolbar(){
+  if(selId===null){ hideToolbar(); return }
+  const el=document.querySelector('[data-lid="'+selId+'"]')
+  const tb=document.getElementById('ctx-toolbar')
+  if(!el){ hideToolbar(); return }
+
+  tb.classList.add('visible')
+
+  // After making it visible, measure and position
+  requestAnimationFrame(()=>{
+    const er=el.getBoundingClientRect()
+    const tw=tb.offsetWidth, th=tb.offsetHeight
+
+    let left = er.left + er.width/2 - tw/2
+    let top  = er.top - th - 14   // 14px gap above element
+
+    // Clamp horizontally
+    left = Math.max(8, Math.min(left, window.innerWidth-tw-8))
+    // If not enough room above, show below
+    if(top < 8) top = er.bottom + 14
+
+    tb.style.left = left+'px'
+    tb.style.top  = top+'px'
+  })
+}
+
+function hideToolbar(){
+  document.getElementById('ctx-toolbar').classList.remove('visible')
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════════ */
+function render(){
+  const cv=document.getElementById('postCanvas')
+  const m=MODES[S.mode], T=TPLS[S.tpl]
+
+  cv.style.cssText=`width:${m.cw}px;height:${m.ch}px;background:${T.bg};position:relative;overflow:hidden;box-shadow:0 10px 52px rgba(0,0,0,.22);transition:width .3s,height .3s;`
+  cv.innerHTML=''
+
+  // Accent panel (split templates)
+  if(T.accentPanel){
+    const pw=m.cw*(m.layout==='cover'?0.32:0.38)|0
+    cv.appendChild(mkDiv(`position:absolute;top:0;left:0;bottom:0;width:${pw}px;background:${T.panelColor};z-index:1;pointer-events:none;`))
+  }
+
+  // Background image
+  if(S.image) cv.appendChild(buildImg(m,T))
+
+  // Layers — shapes & text (bottom to top)
+  S.layers.forEach(l=>{
+    if(l.type==='shape') cv.appendChild(buildShapeEl(l))
+    else if(l.type==='text') cv.appendChild(buildTextEl(l))
+  })
+
+  // Accent top line
+  if(tog('togLine')){
+    cv.appendChild(mkDiv(`position:absolute;top:0;left:0;right:0;height:3px;background:${T.line};z-index:20;pointer-events:none;`))
+  }
+
+  // Content layout
+  const layout=m.layout
+  if(layout==='cover') renderCover(cv,m,T)
+  else if(layout==='story') renderStory(cv,m,T)
+  else renderStandard(cv,m,T)
+
+  // Safe zone overlay
+  if(tog('togSafe')&&m.safe) renderSafeZone(cv,m)
+
+  // Click on empty canvas → deselect
+  cv.addEventListener('mousedown',e=>{
+    if(e.target===cv) deselect()
+  })
+
+  // Update meta
+  document.getElementById('modeBadge').textContent=m.badge
+  document.getElementById('cmeta').textContent=`Canvas ${m.cw}×${m.ch} · Export ${m.realW}×${m.realH} px`
+  document.getElementById('stR').textContent=m.realW+'×'+m.realH
+  updateStats()
+}
+
+/* ── Build shape DOM element ── */
+function buildShapeEl(l){
+  const shape=SHAPES.find(x=>x.id===l.shapeId); if(!shape) return mkDiv('')
+  const isStroke=STROKE_IDS.has(l.shapeId)
+  const T=TPLS[S.tpl]
+  const isSel=l.id===selId
+
+  const wrap=document.createElement('div')
+  wrap.dataset.lid=l.id
+  wrap.style.cssText=`position:absolute;left:${l.x}px;top:${l.y}px;width:${l.sz}px;height:${l.sz}px;z-index:6;cursor:pointer;transform:rotate(${l.ro}deg);opacity:${l.op/100};${isSel?'outline:2px solid var(--accent);outline-offset:3px;':''}`
+
+  wrap.innerHTML=`<svg viewBox="0 0 100 100" width="100%" height="100%"
+    fill="${isStroke?'none':T.accent}" stroke="${T.accent}" stroke-width="${isStroke?9:0}"
+    style="display:block;overflow:visible;pointer-events:none">${shape.d}</svg>`
+
+  wrap.addEventListener('mousedown',e=>{
+    if(e.button!==0) return
+    selectLayer(l.id)
+    dragLayer(e,l)
+    e.stopPropagation(); e.preventDefault()
+  })
+  wrap.addEventListener('dblclick',e=>{ deleteLayer(l.id); e.stopPropagation() })
+  return wrap
+}
+
+/* ── Build text DOM element ── */
+function buildTextEl(l){
+  const T=TPLS[S.tpl]
+  const isSel=l.id===selId
+  const el=document.createElement('div')
+  el.dataset.lid=l.id
+  el.contentEditable='true'
+  el.style.cssText=`position:absolute;left:${l.x}px;top:${l.y}px;z-index:15;font-family:'DM Sans',sans-serif;font-size:${l.sz}px;font-weight:600;color:${l.color||T.text};cursor:pointer;opacity:${l.op/100};min-width:60px;white-space:pre-wrap;${isSel?'outline:2px solid var(--accent);outline-offset:3px;':''}`
+  el.innerText=l.text||'Yazınızı girin'
+
+  el.addEventListener('input',()=>{ l.text=el.innerText })
+  el.addEventListener('mousedown',e=>{
+    if(document.activeElement===el) return // already editing
+    selectLayer(l.id)
+    dragLayer(e,l)
+    e.stopPropagation()
+  })
+  el.addEventListener('dblclick',e=>{
+    hideToolbar()
+    el.focus(); selectAll(el)
+    e.stopPropagation()
+  })
+  el.addEventListener('blur',()=>{ l.text=el.innerText; positionToolbar() })
+  return el
+}
+
+/* ── Drag a layer ── */
+function dragLayer(e,l){
+  const ox=e.clientX-l.x, oy=e.clientY-l.y
+  hideToolbar()
+  const onMove=ev=>{
+    l.x=ev.clientX-ox; l.y=ev.clientY-oy
+    const w=document.querySelector('[data-lid="'+l.id+'"]')
+    if(w){ w.style.left=l.x+'px'; w.style.top=l.y+'px' }
+  }
+  const onUp=()=>{
+    document.removeEventListener('mousemove',onMove)
+    document.removeEventListener('mouseup',onUp)
+    saveHistory(); positionToolbar()
+  }
+  document.addEventListener('mousemove',onMove)
+  document.addEventListener('mouseup',onUp)
+}
+
+/* ── Make content elements draggable ── */
+function makeDraggable(domEl){
+  let drag=false, ox=0, oy=0
+  domEl.addEventListener('mousedown',e=>{
+    if(document.activeElement===domEl) return
+    drag=true
+    const r=domEl.getBoundingClientRect()
+    ox=e.clientX-r.left; oy=e.clientY-r.top
+    e.preventDefault()
+  })
+  document.addEventListener('mousemove',e=>{
+    if(!drag) return
+    const cv=document.getElementById('postCanvas').getBoundingClientRect()
+    domEl.style.position='absolute'
+    domEl.style.left=(e.clientX-cv.left-ox)+'px'
+    domEl.style.top=(e.clientY-cv.top-oy)+'px'
+    domEl.style.margin='0'; domEl.style.maxWidth='none'
+  })
+  document.addEventListener('mouseup',()=>{ if(drag){drag=false;saveHistory()} })
+}
+
+/* ═══════════════════════════════════════════════
+   LAYOUT RENDERERS
+═══════════════════════════════════════════════ */
+function renderCover(cv,m,T){
+  const s=m.safe||{t:0,l:0,r:0,b:0}
+  if(tog('togLogo')){
+    const logo=mkCE(`position:absolute;top:${s.t+8}px;left:${s.l+10}px;z-index:25;font-family:'Poppins',sans-serif;font-weight:900;font-size:${Math.max(10,m.ch*.16)}px;color:${T.logo};`,'logo')
+    logo.innerHTML=esc(S.c.logo)+'<span style="color:'+T.accent+'">+</span>'
+    logo.addEventListener('input',e=>{S.c.logo=e.target.innerText.replace('+','');syncIn()})
+    makeDraggable(logo); cv.appendChild(logo)
+  }
+  const wrap=mkDiv(`position:absolute;left:${s.l+10}px;top:${s.t}px;width:${m.cw-s.l-s.r-20}px;height:${m.ch-s.t-s.b}px;display:flex;flex-direction:column;justify-content:center;gap:5px;z-index:22;`)
+  if(tog('togTag')){ const tag=mkCE(`font-family:'Space Mono',monospace;font-size:${Math.max(6,m.ch*.065)}px;font-weight:700;color:${T.tag};letter-spacing:2.5px;text-transform:uppercase;`,'tag'); tag.innerText=S.c.tag; tag.addEventListener('input',e=>{S.c.tag=e.target.innerText;syncIn()}); makeDraggable(tag); wrap.appendChild(tag) }
+  const hl=mkCE(`font-family:'Poppins',sans-serif;font-weight:800;font-size:${Math.min(S.fsH,m.ch*.26)}px;color:${T.text};line-height:1.1;`,'headline')
+  hl.innerText=S.c.headline; hl.addEventListener('input',e=>{S.c.headline=e.target.innerText;syncIn();updateStats()}); makeDraggable(hl); wrap.appendChild(hl)
+  if(tog('togCta')){ const bd=T.ctaBd?'border:1.5px solid '+T.ctaBd+';':''; const cta=mkCE(`display:inline-flex;align-items:center;gap:5px;background:${T.cta};color:${T.ctaT};font-size:${Math.max(8,m.ch*.08)}px;font-weight:700;padding:5px 12px;width:fit-content;${bd}`,'cta'); cta.innerHTML=arrowSvg(T.ctaT)+' '+esc(S.c.cta); cta.addEventListener('input',e=>{S.c.cta=e.target.innerText.trim();syncIn()}); makeDraggable(cta); wrap.appendChild(cta) }
+  cv.appendChild(wrap)
+}
+
+function renderStory(cv,m,T){
+  const s=m.safe||{t:0,l:0,r:0,b:0}
+  if(tog('togLogo')){ const logo=mkCE(`position:absolute;top:${s.t+10}px;left:${s.l+12}px;z-index:25;font-family:'Poppins',sans-serif;font-weight:900;font-size:14px;color:${T.logo};`,'logo'); logo.innerHTML=esc(S.c.logo)+'<span style="color:'+T.accent+'">+</span>'; logo.addEventListener('input',e=>{S.c.logo=e.target.innerText.replace('+','');syncIn()}); makeDraggable(logo); cv.appendChild(logo) }
+  const wrap=mkDiv(`position:absolute;left:${s.l+14}px;right:${s.r+14}px;bottom:${s.b+10}px;z-index:22;display:flex;flex-direction:column;gap:7px;`)
+  if(tog('togTag')){ const tag=mkCE(`font-family:'Space Mono',monospace;font-size:8px;font-weight:700;color:${T.tag};letter-spacing:3px;text-transform:uppercase;`,'tag'); tag.innerText=S.c.tag; tag.addEventListener('input',e=>{S.c.tag=e.target.innerText;syncIn()}); makeDraggable(tag); wrap.appendChild(tag) }
+  const hl=mkCE(`font-family:'Poppins',sans-serif;font-weight:800;font-size:${S.fsH}px;color:${T.text};line-height:1.12;`,'headline'); hl.innerText=S.c.headline; hl.addEventListener('input',e=>{S.c.headline=e.target.innerText;syncIn();updateStats()}); makeDraggable(hl); wrap.appendChild(hl)
+  const bd=mkCE(`font-size:${S.fsB}px;color:${T.muted};line-height:1.6;`,'body'); bd.innerText=S.c.body; bd.addEventListener('input',e=>{S.c.body=e.target.innerText;syncIn();updateStats()}); makeDraggable(bd); wrap.appendChild(bd)
+  if(tog('togCta')){ const bdr=T.ctaBd?'border:1.5px solid '+T.ctaBd+';':''; const cta=mkCE(`display:inline-flex;align-items:center;gap:6px;background:${T.cta};color:${T.ctaT};font-size:10px;font-weight:700;padding:7px 16px;width:fit-content;${bdr}`,'cta'); cta.innerHTML=arrowSvg(T.ctaT)+' '+esc(S.c.cta); cta.addEventListener('input',e=>{S.c.cta=e.target.innerText.trim();syncIn()}); makeDraggable(cta); wrap.appendChild(cta) }
+  cv.appendChild(wrap)
+}
+
+function renderStandard(cv,m,T){
+  const isLand=m.cw>m.ch*1.2
+  const leftShift=T.accentPanel?(m.cw*.38+16|0):0
+  if(tog('togLogo')){ const logo=mkCE(`position:absolute;top:15px;right:16px;z-index:25;font-family:'Poppins',sans-serif;font-weight:900;font-size:14px;color:${T.logo};`,'logo'); logo.innerHTML=esc(S.c.logo)+'<span style="color:'+T.accent+'">+</span>'; logo.addEventListener('input',e=>{S.c.logo=e.target.innerText.replace('+','');syncIn()}); makeDraggable(logo); cv.appendChild(logo) }
+  const pad=isLand?'14px 22px':'30px 32px'
+  const wrap=mkDiv(`position:relative;z-index:22;padding:${pad};padding-left:${leftShift?leftShift+16+'px':isLand?'22px':'32px'};height:100%;display:flex;flex-direction:column;justify-content:center;gap:${isLand?5:9}px;`)
+  if(tog('togTag')){ const tag=mkCE(`font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:${T.tag};letter-spacing:3px;text-transform:uppercase;`,'tag'); tag.innerText=S.c.tag; tag.addEventListener('input',e=>{S.c.tag=e.target.innerText;syncIn()}); makeDraggable(tag); wrap.appendChild(tag) }
+  const hl=mkCE(`font-family:'Poppins',sans-serif;font-weight:800;font-size:${S.fsH}px;color:${T.text};line-height:1.14;max-width:85%;`,'headline'); hl.innerText=S.c.headline; hl.addEventListener('input',e=>{S.c.headline=e.target.innerText;syncIn();updateStats()}); makeDraggable(hl); wrap.appendChild(hl)
+  if(!isLand){ const bd=mkCE(`font-size:${S.fsB}px;color:${T.muted};line-height:1.65;max-width:82%;`,'body'); bd.innerText=S.c.body; bd.addEventListener('input',e=>{S.c.body=e.target.innerText;syncIn();updateStats()}); makeDraggable(bd); wrap.appendChild(bd) }
+  if(tog('togCta')){ const bdr=T.ctaBd?'border:1.5px solid '+T.ctaBd+';':''; const cta=mkCE(`display:inline-flex;align-items:center;gap:6px;background:${T.cta};color:${T.ctaT};font-size:10px;font-weight:700;padding:8px 17px;width:fit-content;${bdr}`,'cta'); cta.innerHTML=arrowSvg(T.ctaT)+' '+esc(S.c.cta); cta.addEventListener('input',e=>{S.c.cta=e.target.innerText.trim();syncIn()}); makeDraggable(cta); wrap.appendChild(cta) }
+  cv.appendChild(wrap)
+}
+
+function renderSafeZone(cv,m){
+  const s=m.safe, sx=m.cw/m.realW, sy=m.ch/m.realH
+  const sz=mkDiv(`position:absolute;top:${s.t*sy|0}px;left:${s.l*sx|0}px;right:${s.r*sx|0}px;bottom:${s.b*sy|0}px;border:1px dashed rgba(255,255,255,.4);z-index:50;pointer-events:none;`)
+  const lb=mkDiv(`position:absolute;bottom:2px;right:3px;font-size:6px;font-family:'Space Mono',monospace;color:rgba(255,255,255,.38);letter-spacing:.5px;`)
+  lb.textContent='SAFE ZONE'; sz.appendChild(lb); cv.appendChild(sz)
+}
+
+/* ═══════════════════════════════════════════════
+   IMAGE HANDLING
+═══════════════════════════════════════════════ */
+function buildImg(m,T){
+  const wrap=mkDiv('position:absolute;z-index:2;pointer-events:none;overflow:hidden;')
+  const img=document.createElement('img')
+  img.src=S.image; img.style.opacity=S.imgOp/100
+  if(S.imgPos==='cover'){
+    wrap.style.cssText+='inset:0;'
+    img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;'
+    const ov=mkDiv(`position:absolute;inset:0;background:linear-gradient(120deg,rgba(0,15,50,.75) 0%,rgba(0,15,50,.2) 100%);`)
+    wrap.appendChild(img); wrap.appendChild(ov)
+  } else if(S.imgPos==='right'){
+    wrap.style.cssText+=`top:0;right:0;width:${m.cw*.44|0}px;height:100%;`
+    img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;'
+    wrap.appendChild(img)
+  } else {
+    wrap.style.cssText+=`bottom:0;left:0;right:0;height:${m.ch*.38|0}px;`
+    img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;'
+    wrap.appendChild(img)
+  }
+  if(!wrap.contains(img)) wrap.appendChild(img)
+  return wrap
+}
+function uploadImg(files){
+  if(!files||!files[0]) return
+  const r=new FileReader()
+  r.onload=e=>{ S.image=e.target.result; addThumb(e.target.result); document.getElementById('imgPosCtrls').style.display=''; saveHistory(); render(); notify('Görsel yüklendi!') }
+  r.readAsDataURL(files[0])
+}
+function addThumb(src){
+  const row=document.getElementById('imgThumbs')
+  row.querySelectorAll('.ithumb').forEach(t=>t.classList.remove('sel'))
+  const img=document.createElement('img'); img.src=src; img.className='ithumb sel'
+  img.onclick=()=>{ S.image=src; row.querySelectorAll('.ithumb').forEach(t=>t.classList.remove('sel')); img.classList.add('sel'); render() }
+  row.appendChild(img)
+}
+function setImgPos(pos,el){
+  S.imgPos=pos
+  el.closest('#imgPosChips').querySelectorAll('.sa').forEach(c=>c.classList.remove('on'))
+  el.classList.add('on'); render()
+}
+function setupDrop(){
+  const d=document.getElementById('imgDrop')
+  d.addEventListener('dragover',e=>{e.preventDefault();d.classList.add('drag')})
+  d.addEventListener('dragleave',()=>d.classList.remove('drag'))
+  d.addEventListener('drop',e=>{e.preventDefault();d.classList.remove('drag');const f=e.dataTransfer.files;if(f[0]&&f[0].type.startsWith('image/'))uploadImg(f)})
+}
+
+/* ═══════════════════════════════════════════════
+   SHAPE BATCH ACTIONS
+═══════════════════════════════════════════════ */
+function clearShapes(){
+  S.layers=S.layers.filter(l=>l.type!=='shape')
+  deselect(); saveHistory(); render(); notify('Şekiller silindi')
+}
+function randomShapes(){
+  const m=MODES[S.mode], ids=SHAPES.map(s=>s.id)
+  S.layers=S.layers.filter(l=>l.type!=='shape')
+  const n=2+Math.random()*4|0
+  for(let i=0;i<n;i++){
+    const sz=40+Math.random()*180|0, shapeId=ids[Math.random()*ids.length|0]
+    S.layers.push({id:nid(),type:'shape',shapeId,op:6+Math.random()*20|0,sz,ro:Math.random()*360|0,
+      x:Math.random()*(m.cw-sz)|0, y:Math.random()*(m.ch-sz)|0})
+  }
+  deselect(); saveHistory(); render(); notify('Rastgele eklendi!')
+}
+
+/* ═══════════════════════════════════════════════
+   HISTORY & SYNC
+═══════════════════════════════════════════════ */
+function saveHistory(){
+  S.history.push(JSON.stringify({mode:S.mode,tpl:S.tpl,c:{...S.c},
+    layers:JSON.parse(JSON.stringify(S.layers)),fsH:S.fsH,fsB:S.fsB,imgPos:S.imgPos,imgOp:S.imgOp,lidCtr}))
+  if(S.history.length>30) S.history.shift()
+}
+function undo(){
+  if(S.history.length<2){notify('Geri alınacak bir şey yok');return}
+  S.history.pop()
+  const p=JSON.parse(S.history[S.history.length-1])
+  Object.assign(S,p); S.c={...p.c}; S.layers=p.layers; lidCtr=p.lidCtr||lidCtr
+  deselect(); syncIn(); buildTplGrid(); render(); notify('Geri alındı')
+}
+function syncIn(){
+  document.getElementById('inH').value=S.c.headline
+  document.getElementById('inB').value=S.c.body
+  document.getElementById('inTag').value=S.c.tag
+  document.getElementById('inCta').value=S.c.cta
+  document.getElementById('inLogo').value=S.c.logo
+  updateStats()
+}
+function updateStats(){
+  document.getElementById('stH').textContent=(S.c.headline||'').length+' ch'
+  document.getElementById('stB').textContent=(S.c.body||'').length+' ch'
+}
+
+/* ═══════════════════════════════════════════════
+   DARK MODE
+═══════════════════════════════════════════════ */
+function toggleDark(){
+  const dark=document.documentElement.classList.toggle('dark')
+  document.getElementById('dmIcon').textContent=dark?'☀️':'🌙'
+  document.getElementById('dmLabel').textContent=dark?'Açık Mod':'Karanlık Mod'
+  try{localStorage.setItem('pms-theme',dark?'dark':'light')}catch(e){}
+  notify(dark?'🌙 Karanlık mod':'☀️ Açık mod')
+}
+function restoreTheme(){
+  try{
+    if(localStorage.getItem('pms-theme')==='dark'){
+      document.documentElement.classList.add('dark')
+      document.getElementById('dmIcon').textContent='☀️'
+      document.getElementById('dmLabel').textContent='Açık Mod'
+    }
+  }catch(e){}
+}
+
+/* ═══════════════════════════════════════════════
+   EXPORT
+═══════════════════════════════════════════════ */
+async function doExport(type){
+  // Hide floating toolbar during export
+  hideToolbar(); deselect()
+  const id=type==='png'?'btnPNG':type==='pdf'?'btnPDF':null
+  const btn=id?document.getElementById(id):null
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Hazırlanıyor...'}
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js')
+  if(type==='pdf') await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')
+  try{
+    const m=MODES[S.mode]
+    const scale=m.realW/m.cw
+    const canvas=await html2canvas(document.getElementById('postCanvas'),{scale,useCORS:true,logging:false,backgroundColor:null})
+    if(type==='png'){
+      const a=document.createElement('a'); a.download=`pms-${S.mode}-${S.tpl}.png`
+      a.href=canvas.toDataURL('image/png'); a.click(); notify('✓ PNG indirildi — '+m.realW+'×'+m.realH+'px')
+    } else if(type==='pdf'){
+      const {jsPDF}=window.jspdf; const w=canvas.width/scale, h=canvas.height/scale
+      const pdf=new jsPDF({orientation:w>h?'landscape':'portrait',unit:'px',format:[w,h]})
+      pdf.addImage(canvas.toDataURL('image/png'),'PNG',0,0,w,h)
+      pdf.save(`pms-${S.mode}.pdf`); notify('✓ PDF indirildi')
+    } else {
+      canvas.toBlob(async blob=>{
+        try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);notify('✓ Panoya kopyalandı')}
+        catch{notify('Panoya kopyalama bu tarayıcıda desteklenmiyor')}
+      })
+    }
+  }catch(err){ notify('Dışa aktarma başarısız — tekrar deneyin') }
+  finally{
+    if(btn){btn.disabled=false;btn.innerHTML=type==='png'?'<i class="fas fa-image"></i> Download PNG (Full Res)':'<i class="fas fa-file-pdf"></i> Download PDF'}
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════ */
+function mkDiv(css){const d=document.createElement('div');d.style.cssText=css;return d}
+function mkCE(css,f){const d=mkDiv(css);d.contentEditable='true';d.dataset.field=f;return d}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function tog(id){return document.getElementById(id)?.classList.contains('on')}
+function arrowSvg(c){return`<svg width="9" height="9" viewBox="0 0 10 10" style="flex-shrink:0"><path d="M1,5H9 M6,2L9,5L6,8" stroke="${c}" stroke-width="1.8" fill="none" stroke-linecap="square"/></svg>`}
+function copyColor(c){navigator.clipboard.writeText(c).catch(()=>{});notify('Kopyalandı: '+c)}
+function notify(msg){const n=document.getElementById('notif');n.textContent=msg;n.style.display='block';clearTimeout(n._t);n._t=setTimeout(()=>n.style.display='none',2700)}
+function loadScript(src){return new Promise(res=>{if(document.querySelector(`script[src="${src}"]`)){res();return}const s=document.createElement('script');s.src=src;s.onload=res;document.head.appendChild(s)})}
+function selectAll(el){const r=document.createRange();r.selectNodeContents(el);window.getSelection().removeAllRanges();window.getSelection().addRange(r)}
+</script>
+</body>
+</html>
+
