@@ -1,24 +1,13 @@
 {
-  "name": "pms-social-designer",
-  "version": "1.0.0",
-  "private": true,
+  "name": "pms-post-designer",
+  "version": "1.4.0",
+  "description": "PMS+ Social Media Post Designer",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "dependencies": {
-    "next": "14.2.0",
-    "react": "^18",
-    "react-dom": "^18",
-    "html2canvas": "^1.4.1",
-    "jspdf": "^2.5.1"
+    "express": "^4.18.2"
   },
-  "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "typescript": "^5"
-  }
+  "engines": { "node": ">=16.0.0" }
 }
